@@ -2,96 +2,104 @@
 title: "Probability Theory"
 ---
 
-::: callout-note
-You can delete everything in here and start fresh new website.
-:::
+# Basic Rules of Probability
 
-This is a `.qmd` file. It is plain text with special features. Any time you write just like this, it will be compiled to normal text in the website. If you put a \# in front of your text, it will create a top level-header.
+* If $A$ is an event --> $\overline{A}$ is the complement  
+with   $P(A)+P(\overline{A})=1$
 
-To learn more about Quarto websites visit <https://quarto.org/docs/websites>.
+* Impossible Event: $P(A)=0$, Certain Event: $P(A)=1$
 
-# Text Formatting
+* Probability is a real number greater or equal to 0
 
-*italics* and **bold**
+* Total probability is equal to 1
 
-superscript^2^ / subscript~2~
-
-~~strikethrough~~
-
-`verbatim code`
-
-> Blockquote
-
-# Headings
-
-## Header 2
-### Header 3
-#### Header 4
-##### Header 5
-###### Header 6
-
-# Links & Images
-
-<https://quarto.org>
-
-[Quarto](https://quarto.org)
-
-![Caption](../../assets/img/elephant.png)
-
-[![Caption](../../assets/img/elephant.png)](https://quarto.org)
-
-[![Caption](../../assets/img/elephant.png)](https://quarto.org "An elephant")
+* $\cup$ : Union/ or , $\cap$ : Intersection/ and
 
 
-# Lists
+* Non-Mutually Exclusive: $P(A \cup B)= P(A) + P(B) - P(A \cap B)$ --> `Addition Rule`  
 
-* unordered list
-    + sub-item 1
-    + sub-item 2
-        - sub-sub-item 1
-        
-*   item 2
+![Venn Diagram of Non-Mutually Exclusive Events](../../assets/img/01 Probability/NonMutuallyExclusive.png)
 
-    Continued (indent 4 spaces)
-    
-    
-1. ordered list
-2. item 2
-    i) sub-item 1
-         A.  sub-sub-item 1
-         
-(@)  A list whose numbering
+* Mutually Exclusive: $P(A \cup B)= P(A) + P(B)$ as the events can't happen at the same time $P(A \cap B)=0$  
 
-continues after
+![Venn Diagram of Mutually Exclusive Events](../../assets/img/01 Probability/MutuallyExclusive.png)
 
-(@)  an interruption
+* Conditional Probability:  
+$P(A|B)$ is the probability of $A$ happening given that $B$ has happened  
+If $A , B$ are independent: $P(A|B)= P(A)$ --> `Stochastic Independent`
 
-# Tables
+* $P(A \cap B)= P(A|B) * P(B)= P(B|A) * P(A)$  
+then $P(A|B)= \frac{P(A \cap B)}{P(B)}$ --> `Multiplication Rule`
 
-| Right | Left | Default | Center |
-|------:|:-----|---------|:------:|
-|   12  |  12  |    12   |    12  |
-|  123  |  123 |   123   |   123  |
-|    1  |    1 |     1   |     1  |
 
-# Source Code
+# Probability Tree
 
-Use ``` to delimit blocks of source code:
+* Branches from 1 Node sum to 1  
 
-```
-code
-```
+* Probability of two consecutive events is obtained by multiplying the probabilities  
 
-Add a language to syntax highlight code blocks:
+> ### **`Assignment 1:`**
+Given the following Probability Tree and with defining being on time as event $T$, being not on time as $\overline{T}$, having a change in scope as $S$ and having no change in scope as $\overline{S}$  
 
-```{r}
-1 + 1
-```
+![](../../assets/img/01 Probability/Probability Tree.PNG)  
 
-```{r}
-cars
-```
+### **Solution:**  
+$P(T\cap S)= 0.3* 0.2=0.6$
 
-```{r}
-plot(cars)
-```
+$P(T\cap \overline{S})= 0.7* 0.6=0.42$
+
+$P(\overline{T}\cap S)= 0.3* 0.8=0.24$
+
+$P(\overline{T}\cap \overline{S})= 0.7* 0.4=0.28$
+  
+# Set Theory
+
+* Venn Diagrams are used to visualize the occurrence & relationships between events  
+
+![Generic Venn Diagram](../../assets/img/01 Probability/venn_diag.png)  
+
+
+> ### **`Assignment 2:`**
+Using a random sample of 1000 cistomers of application development company that has developed an app available on either Smartphones "$S$", Tablets "$T$" or Computers "$C$". Given the Venn Diagram of the number of customers using each device.
+
+![](../../assets/img/01 Probability/Venn Assignment 2.PNG)  
+
+### **Solution:**  
+
+* The percentage of customers using all three devices:
+$P(S\cap T\cap C)=0.5\%$  
+
+* The percentage of customers using at least two devices:
+$P(S\cap T) + P(T\cap C) + P(C\cap S)+ P(S\cap T\cap C)=7.3+3.3+8.8+0.5=19.9\%$  
+
+* The percentage of customers using only one device: $= 42.3 + 27.8+ 10=80.1\%$  
+or $100 - P$(at least 2 devices)$= 100-19.9=80.1\%$
+  
+# Bayes Theorem
+
+$P(A|B)= \frac{P(A|B)*P(A)}{P(B)}= \frac{P(A|B)*P(A)}{P(B|A)*P(A)+P(B|\overline{A})*P(\overline{A})}$  --> `Bayesian Rule`  
+
+> ### **`Assignment 3:`**
+You are quality assurance manager and you want to buy a new tool that automates part of the quality assurance. If the tool finds a product it considers faulty, an alarm is triggered. The seller of the tool states that if a product is faulty, the tool is 97% reliable and if the product is flawless, the test is 99% reliable. Also, from your past experience you know that 4% of your products come out with flaws.  
+
+
+### **Givens:**  
+
+$P(B|A)=0.79$  
+$P(B|\overline{A})=0.01$  
+$P(\overline{B}|\overline{A})=0.99$  
+$P(A)=0.04$  
+$P(\overline{A})=0.96$  
+
+
+### **Solution:**  
+
+Using the Bayesian Rule:  
+
+* $P(\overline{A}|B)=\frac{0.01*0.96}{(0.01*0.96)+(0.79*0.04)}= 0.1983471074 =19.83\%$  
+
+* $P(A|B)=\frac{0.79*0.04}{(0.01*0.96)+(0.79*0.04)}= 0.8016528926 =80.17\%$  
+
+* **Verification:** $P(\overline{A}|B)+P(A|B)=19.83+80.17=100\%$  
+
+These results show that in case the alarm is triggered, there is a possibility of about `19.83%` that the product is flawless and a probability of `80.17%` that the product is faulty.
