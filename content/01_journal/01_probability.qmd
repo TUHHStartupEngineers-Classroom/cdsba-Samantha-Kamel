@@ -85,7 +85,7 @@ You are quality assurance manager and you want to buy a new tool that automates 
 
 ### **Givens:**  
 
-$P(B|A)=0.79$  
+$P(B|A)=0.97$  
 $P(B|\overline{A})=0.01$  
 $P(\overline{B}|\overline{A})=0.99$  
 $P(A)=0.04$  
@@ -96,9 +96,9 @@ $P(\overline{A})=0.96$
 
 Using the Bayesian Rule:  
 
-* $P(\overline{A}|B)=\frac{0.01*0.96}{(0.01*0.96)+(0.79*0.04)}= 0.1983471074 =19.83\%$  
+* $P(\overline{A}|B)=\frac{0.01*0.96}{(0.01*0.96)+(0.97*0.04)}= 0.1983471074 =19.83\%$  
 
-* $P(A|B)=\frac{0.79*0.04}{(0.01*0.96)+(0.79*0.04)}= 0.8016528926 =80.17\%$  
+* $P(A|B)=\frac{0.97*0.04}{(0.01*0.96)+(0.97*0.04)}= 0.8016528926 =80.17\%$  
 
 * **Verification:** $P(\overline{A}|B)+P(A|B)=19.83+80.17=100\%$  
 
