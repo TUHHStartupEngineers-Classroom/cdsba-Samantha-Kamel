@@ -2,6 +2,87 @@
 title: "Statistical Concepts"
 ---
 
+> ### **`Assignment 4:`**  
+Given a set of Data:
+
+1. For each variable, compute expected value, variance and standard deviation.  
+2. Explain, if it makes sense to compare the standard deviations.  
+3. Then, examine the relationship between both variables and compute the covariance and correlation  
+4. What measure is easier to interpret? Please discuss your interpretation.  
+5. Compute the conditional expected value for:
+   * $E[income|age<=18]$  
+   * $E[income|age \in [18,65)]$  
+   * $E[income|age>=65]$  
+   
+### **Solution:**  
+
+1. Code & results:  
+  
+```{r}
+#Loading Libraries & files:
+library(tidyverse)
+random_vars <- readRDS("D:/OneDrive/Samantha/TUHH/1stsemester/Causal Data Science for Business Analytics (SE)/Causal_Data_Science_Data/random_vars.rds")
+#Viewing the Data:
+random_vars
+
+#Calculating the Expected Values:
+expectedValues <-summarize(random_vars, Age_Expected_Value=mean(age, na.rm = TRUE), Income_Expected_Value=mean(income, na.rm = TRUE))
+expectedValues
+
+#Calculating the Variance:
+variances <-summarize(random_vars, Age_Variance=var(age, na.rm = TRUE), Income_Variance=var(income, na.rm = TRUE))
+variances
+
+#Calculating the Standard Deviation:
+std <-summarize(random_vars, Age_Standard_Deviation=sd(age, na.rm = TRUE), Income_Standard_Deviation=sd(income, na.rm = TRUE))
+std
+```  
+  
+  
+2. The standard deviation is a measure of the proportions of the data being far away from the expected value, therefore, in this case the values stand for age and income and the comparison won't indicate anything.  
+  
+  
+3. Code & results:  
+  
+```{r}
+#Relationships Between Variables:
+cov_corr <-summarize(random_vars, Covariance=cov(age,income), Correlation=cor(age,income))
+cov_corr
+```  
+  
+  
+4. The covariance is the relationship between the two variables and hoe they behave to each other (Measure of linear dependency). Therefore when the value is a high positive value, it means that the two variables are moving into the same direction. But it is not possible to indicate whether the result is high or not as there is no value to compare relative to it. Therefore, using the correlation value is better as the correlation is the standardized measure and is by construction bounded between -1 and 1. The high values in magnitude (close to 1 or -1) indicates very strong linear relationship and  the direction of this relation is represented by the algebraic sign.  
+
 ::: callout-note
-You can delete everything in here and start fresh.
-:::
+`Interpretation:` Since both values of the covariance and correlation are positive, the age and income are moving in the same direction. And using the correlation value which is 0.548, this means that relation falls in the beginning of the of the strong range of correlation.  
+(According to <https://www.tastylive.com/concepts-strategies/correlation#:~:text=Positive%20correlation%20is%20measured%20on,move%20in%20the%20same%20direction.> Positive correlation is measured on a 0.1 to 1.0 scale. Weak positive correlation would be in the range of 0.1 to 0.3, moderate positive correlation from 0.3 to 0.5, and strong positive correlation from 0.5 to 1.0).  
+This means that when the age increases, the income increases and vice versa (not with the same exact rate).
+:::  
+  
+5. The conditional expected values:
+* $E[income|age<=18]$:  
+
+```{r}
+#The expected value of the income when age<=18:
+condExpectedValue1<-mean(filter(random_vars,age<=18)$income)
+condExpectedValue1
+```  
+* $E[income|age\in[18,65)]$  
+
+```{r}
+#The expected value of the income when 18<=age<65:
+condExpectedValue2<-mean(filter(random_vars,18<=age & age<65)$income)
+condExpectedValue2
+```  
+* $E[income|age>=65]$  
+
+```{r}
+#The expected value of the income when age>=65:
+condExpectedValue3<-mean(filter(random_vars,age>=65)$income)
+condExpectedValue3
+```  
+
+
+
+
+
