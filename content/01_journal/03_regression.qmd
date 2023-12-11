@@ -2,6 +2,137 @@
 title: "Regression and Statistical Inference"
 ---
 
+> ### **`Assignment 5:`**  
+Given a set of Data:
+
+1. Read the data and check the dimensions. How many rows and how many columns does the data have?  
+2. Use appropriate commands to get a more detailed look at the data. What data types do you see? How do numbers differ from strings regarding their data type?  
+3. Run a linear regression. You want to explain what factors are relevant for the pricing of a car.    
+4. Choose one regressor and:  
+   * explain what data type it is and what values it can take on  
+   * what effect is has on the price and what changing the value would have as a result  
+   * whether its effect is statistically significant.  
+5. Add a variable seat_heating to the data and assign a value TRUE for all observations. Assign it to a new object and run a regression. What coefficient do you get for the new variable seat_heating and how can you explain it?  
+
+### **Solution:**  
+
+1. Code & results:  
+```{r}
+# Load tidyerse package & Data:
+library(tidyverse)  
+
+car_prices <- readRDS("D:/OneDrive/Samantha/TUHH/1stsemester/Causal Data Science for Business Analytics (SE)/Causal_Data_Science_Data/car_prices.rds")
+
+#Data Details:
+data_dimension<-dim(car_prices)
+sprintf("Number of Rows (factors): %d",data_dimension[1])
+sprintf("Number of Columns (cars): %d",data_dimension[2])
+```
+
+2. Data Viewing:  
+By having a look at the following data. The factors used are either characters or numeric values. The 2 data types available are chr (character) for strings and dbl (double) for numbers.
+```{r}
+#View Data & check Data Types:
+glimpse(car_prices)
+sapply(car_prices, class)
+```  
+
+3. Linear Regression:  
+```{r}
+#Linear Regression: 
+lm_dat_original <- lm(price ~ ., data=car_prices)
+summary(lm_dat_original)
+```  
+Based on the p-value (a low p-value provides support for the claim that the alternative hypothesis is true instead of the null hypothesis.The alternative hypothesis states, that there is indeed a correlation between the independent and the dependent variable. Because the p-value is low, we reject the null hypothesis and the alternative hypothesis (significant correlation) is true) resulting from the previous summary:  
+
+* The most significant factors, with the least p-value, affecting the car prices are:  
+1. enginetypeohc  
+2. enginetypeohcv  
+3. cylindernumberfive  
+4. cylindernumberfour  
+5. enginesize  
+6. stroke  
+7. peakrpm  
+
+* These factors are significant as well because the p-value is still less than $\alpha =0.05$ but not as significant as the previous ones:  
+1. carbodyhardtop  
+2. carwidth  
+3. cylindernumbersix  
+4. cylindernumbertwelve
+
 ::: callout-note
-You can delete everything in here and start fresh.
-:::
+Combining the previous results would summarize the most relevant factors for the pricing of a car to:
+
+| Factor      | Estimate | p-value        |    
+|:-----------:|:--------:|:--------------:|  
+| Engine Size | 125.934  | $5.00*10^{-6}$ |   
+| Stroke      | -4527.137| $2.49*10^{-6}$ |  
+| Peak RPM    | 2.526    | $1.08*10^{-4}$ |  
+
+
+The Engine type could be ignored as 2 types of the available in the data set are significant and the other type is with high p-value (not significant). The same applies for the Cylinder Number as 2 Cylinders are significat and the others are less significant.
+:::  
+
+4. One Regressor Evaluation:  
+
+* Engine Size:  
+By repeating the linear regression with the Engine size factor only, the following results were obtained:
+```{r}
+#Engine Size Linear Regression:
+lm_engsize <- lm(price ~ enginesize, data=car_prices) 
+summary(lm_engsize)
+```  
+By checking the estimate value it is positive, therefore it indicates a positive relation (when the engine size increase, the price increase).  
+```{r}
+confint(lm_engsize, level = .95)
+confint(lm_engsize, level = .9)
+```
+Then by checking the confidence intervals with different levels, they were completely positive and hence rejects the null hypothesis. That means that we expect an effect in the price  when we change the independent variable (engine size) associated with the significant coefficient. This as well is compatible with the p-value criteria (a very low p-value). As a result: `Engine size is statistically significant`   
+This is also validated by plotting the results:
+```{r}
+#Plot for validation:
+ggplot(lm_engsize, aes(x = price, y = enginesize)) + 
+geom_point(size = 3, alpha = 0.8)
+```
+
+* Stroke:
+```{r}
+#Stroke Linear Regression:
+lm_stroke <- lm(price ~ stroke, data=car_prices) 
+summary(lm_stroke)
+confint(lm_stroke, level = .95)
+confint(lm_stroke, level = .9)
+#Plot for validation:
+ggplot(lm_stroke, aes(x = price, y = stroke)) + 
+geom_point(size = 3, alpha = 0.8)
+```
+
+* Peak RPM:  
+```{r}
+#Peak RPM Linear Regression:
+lm_peakrpm <- lm(price ~ peakrpm, data=car_prices) 
+summary(lm_peakrpm)
+confint(lm_peakrpm, level = .95)
+confint(lm_peakrpm, level = .9)
+#Plot for validation:
+ggplot(lm_peakrpm, aes(x = price, y = peakrpm)) + 
+  geom_point(size = 3, alpha = 0.8)
+```
+
+By repeating the same steps for the 2 other factors individually: `Stroke & Peak RPM are not statistically signficant` as they have confidence intervals that are not completely positive or negative which supports the null hypothesis and this is also visualized by the plots.  
+
+5. Adding the extra feature (seat_heating):  
+```{r}
+#Extra Feature
+car_prices_extraFeatures <- car_prices %>% mutate(seat_heating = TRUE)
+lm_extraFeatures <- lm(price ~ ., data=car_prices_extraFeatures)
+summary(lm_extraFeatures)
+lm_seathaeting <- lm(price ~ seat_heating, data=car_prices_extraFeatures)
+summary(lm_seathaeting)
+```
+By adding the extra feature seat_heating to the factors and performing the linear regression again either with all factors or with the extra factor added, we get the seat_heating coefficient as NA (missing value). This value is logical because the factor in this data set was assigned to true always and hence not affecting the price. This is also validated by the plot.  
+```{r}
+#Plot for Validation:
+ggplot(lm_seathaeting, aes(x = price, y = seat_heating)) + 
+geom_point(size = 3, alpha = 0.8)
+```
