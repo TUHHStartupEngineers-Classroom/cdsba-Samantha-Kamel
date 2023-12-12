@@ -70,12 +70,21 @@ Combining the previous results would summarize the most relevant factors for the
 | Peak RPM    | 2.526    | $1.08*10^{-4}$ |  
 
 
-The Engine type could be ignored as 2 types of the available in the data set are significant and the other type is with high p-value (not significant). The same applies for the Cylinder Number as 2 Cylinders are significat and the others are less significant.
+The Engine type could be ignored as 2 types of the available in the data set are significant and the other type is with high p-value (not significant). The same applies for the Cylinder Number as 2 Cylinders are significant and the others are less significant.
 :::  
 
 4. One Regressor Evaluation:  
 
 * Engine Size:  
+By observing the previous results, the estimate value of the Engine size is positive and hence resulting in a positive relationship. And the p-value is very small *** indicating that this factor is significant.  
+
+```{r}
+confint(lm_dat_original, level = .95)
+confint(lm_dat_original, level = .9)
+```
+
+For extra validation the confidence intervals with different levels were obtained and the whole range for the Engine size factor was positive reflecting that it is statistically significant.  
+
 By repeating the linear regression with the Engine size factor only, the following results were obtained:
 ```{r}
 #Engine Size Linear Regression:

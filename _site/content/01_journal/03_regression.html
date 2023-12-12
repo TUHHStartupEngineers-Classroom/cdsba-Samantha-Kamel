@@ -445,7 +445,7 @@ Note
 </tr>
 </tbody>
 </table>
-<p>The Engine type could be ignored as 2 types of the available in the data set are significant and the other type is with high p-value (not significant). The same applies for the Cylinder Number as 2 Cylinders are significat and the others are less significant.</p>
+<p>The Engine type could be ignored as 2 types of the available in the data set are significant and the other type is with high p-value (not significant). The same applies for the Cylinder Number as 2 Cylinders are significant and the others are less significant.</p>
 </div>
 </div>
 <ol start="4" type="1">
@@ -453,12 +453,100 @@ Note
 </ol>
 <ul>
 <li>Engine Size:<br>
-By repeating the linear regression with the Engine size factor only, the following results were obtained:</li>
+By observing the previous results, the estimate value of the Engine size is positive and hence resulting in a positive relationship. And the p-value is very small *** indicating that this factor is significant.</li>
 </ul>
-<div class="cell" data-hash="03_regression_cache/html/unnamed-chunk-4_7d287f4198fff23984abe8e2f7814c46">
-<div class="sourceCode cell-code" id="cb11"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1"></a><span class="co">#Engine Size Linear Regression:</span></span>
-<span id="cb11-2"><a href="#cb11-2"></a>lm_engsize <span class="ot">&lt;-</span> <span class="fu">lm</span>(price <span class="sc">~</span> enginesize, <span class="at">data=</span>car_prices) </span>
-<span id="cb11-3"><a href="#cb11-3"></a><span class="fu">summary</span>(lm_engsize)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell" data-hash="03_regression_cache/html/unnamed-chunk-4_6470092c884c7a6848c8afb5d4e5372a">
+<div class="sourceCode cell-code" id="cb11"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1"></a><span class="fu">confint</span>(lm_dat_original, <span class="at">level =</span> .<span class="dv">95</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>#&gt;                              2.5 %       97.5 %
+#&gt; (Intercept)          -6.683134e+04 -5708.591461
+#&gt; aspirationturbo      -2.123031e+02  3904.715423
+#&gt; doornumbertwo        -8.880057e+02  1373.051204
+#&gt; carbodyhardtop       -6.508183e+03  -875.302661
+#&gt; carbodyhatchback     -5.792190e+03  -896.479709
+#&gt; carbodysedan         -4.973242e+03   387.602227
+#&gt; carbodywagon         -6.373755e+03  -482.087396
+#&gt; drivewheelfwd        -2.632717e+03  1623.588215
+#&gt; drivewheelrwd        -2.522030e+03  2491.138949
+#&gt; enginelocationrear    1.558895e+03 11728.088662
+#&gt; wheelbase            -2.135865e+02   153.193109
+#&gt; carlength            -1.318793e+02    72.399687
+#&gt; carwidth              2.484517e+02  1215.185989
+#&gt; carheight            -1.428819e+02   389.272214
+#&gt; curbweight           -9.086424e-01     6.132334
+#&gt; enginetypedohcv      -1.793062e+04   846.708835
+#&gt; enginetypel          -2.552383e+03  4509.878243
+#&gt; enginetypeohc         1.500996e+03  5189.507548
+#&gt; enginetypeohcf       -2.240453e+03  4186.291965
+#&gt; enginetypeohcv       -8.666335e+03 -3778.310183
+#&gt; cylindernumberfive   -1.769255e+04 -5756.526294
+#&gt; cylindernumberfour   -1.782963e+04 -5269.025514
+#&gt; cylindernumbersix    -1.159348e+04 -2709.316066
+#&gt; cylindernumberthree  -1.358731e+04  4949.451134
+#&gt; cylindernumbertwelve -1.941739e+04 -2827.032165
+#&gt; enginesize            7.347203e+01   178.396665
+#&gt; fuelsystem2bbl       -1.569500e+03  1923.771576
+#&gt; fuelsystemmfi        -8.134945e+03  2052.909867
+#&gt; fuelsystemmpfi       -1.620436e+03  2338.991505
+#&gt; fuelsystemspdi       -5.239202e+03   151.421288
+#&gt; fuelsystemspfi       -4.425440e+03  5454.972678
+#&gt; boreratio            -4.552905e+03  1939.424404
+#&gt; stroke               -6.351094e+03 -2703.179801
+#&gt; compressionratio     -1.836863e+03   361.059971
+#&gt; horsepower           -3.459530e+01    55.182371
+#&gt; peakrpm               1.272152e+00     3.778780
+#&gt; citympg              -4.197613e+02   239.056414
+#&gt; highwaympg           -1.755422e+02   485.258537</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb13"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1"></a><span class="fu">confint</span>(lm_dat_original, <span class="at">level =</span> .<span class="dv">9</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>#&gt;                                5 %          95 %
+#&gt; (Intercept)          -6.186665e+04 -10673.277432
+#&gt; aspirationturbo       1.221011e+02   3570.311210
+#&gt; doornumbertwo        -7.043517e+02   1189.397199
+#&gt; carbodyhardtop       -6.050653e+03  -1332.832509
+#&gt; carbodyhatchback     -5.394536e+03  -1294.133023
+#&gt; carbodysedan         -4.537808e+03    -47.831503
+#&gt; carbodywagon         -5.895205e+03   -960.637234
+#&gt; drivewheelfwd        -2.286999e+03   1277.870488
+#&gt; drivewheelrwd        -2.114836e+03   2083.945045
+#&gt; enginelocationrear    2.384887e+03  10902.097462
+#&gt; wheelbase            -1.837949e+02    123.401489
+#&gt; carlength            -1.152868e+02     55.807159
+#&gt; carwidth              3.269745e+02   1136.663141
+#&gt; carheight            -9.965780e+01    346.048073
+#&gt; curbweight           -3.367402e-01      5.560432
+#&gt; enginetypedohcv      -1.640544e+04   -678.477117
+#&gt; enginetypel          -1.978752e+03   3936.247160
+#&gt; enginetypeohc         1.800595e+03   4889.908750
+#&gt; enginetypeohcf       -1.718442e+03   3664.280578
+#&gt; enginetypeohcv       -8.269305e+03  -4175.339227
+#&gt; cylindernumberfive   -1.672305e+04  -6726.028378
+#&gt; cylindernumberfour   -1.680939e+04  -6289.258519
+#&gt; cylindernumbersix    -1.087187e+04  -3430.930975
+#&gt; cylindernumberthree  -1.208166e+04   3443.805514
+#&gt; cylindernumbertwelve -1.806984e+04  -4174.581121
+#&gt; enginesize            8.199451e+01    169.874176
+#&gt; fuelsystem2bbl       -1.285759e+03   1640.031137
+#&gt; fuelsystemmfi        -7.307438e+03   1225.402867
+#&gt; fuelsystemmpfi       -1.298832e+03   2017.387632
+#&gt; fuelsystemspdi       -4.801350e+03   -286.431296
+#&gt; fuelsystemspfi       -3.622905e+03   4652.437632
+#&gt; boreratio            -4.025567e+03   1412.085913
+#&gt; stroke               -6.054793e+03  -2999.481111
+#&gt; compressionratio     -1.658337e+03    182.534027
+#&gt; horsepower           -2.730312e+01     47.890194
+#&gt; peakrpm               1.475752e+00      3.575180
+#&gt; citympg              -3.662489e+02    185.544045
+#&gt; highwaympg           -1.218687e+02    431.585098</code></pre>
+</div>
+</div>
+<p>For extra validation the confidence intervals with different levels were obtained and the whole range for the Engine size factor was positive reflecting that it is statistically significant.</p>
+<p>By repeating the linear regression with the Engine size factor only, the following results were obtained:</p>
+<div class="cell" data-hash="03_regression_cache/html/unnamed-chunk-5_196dadcc2058578684e72eec73cffdbf">
+<div class="sourceCode cell-code" id="cb15"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1"></a><span class="co">#Engine Size Linear Regression:</span></span>
+<span id="cb15-2"><a href="#cb15-2"></a>lm_engsize <span class="ot">&lt;-</span> <span class="fu">lm</span>(price <span class="sc">~</span> enginesize, <span class="at">data=</span>car_prices) </span>
+<span id="cb15-3"><a href="#cb15-3"></a><span class="fu">summary</span>(lm_engsize)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>#&gt; 
 #&gt; Call:
@@ -481,14 +569,14 @@ By repeating the linear regression with the Engine size factor only, the followi
 </div>
 </div>
 <p>By checking the estimate value it is positive, therefore it indicates a positive relation (when the engine size increase, the price increase).</p>
-<div class="cell" data-hash="03_regression_cache/html/unnamed-chunk-5_0338f07d340fe3fa50f6bee22fb7887a">
-<div class="sourceCode cell-code" id="cb13"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1"></a><span class="fu">confint</span>(lm_engsize, <span class="at">level =</span> .<span class="dv">95</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell" data-hash="03_regression_cache/html/unnamed-chunk-6_33b941d59bffb3e2b0fb9ffcd0c96c9b">
+<div class="sourceCode cell-code" id="cb17"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb17-1"><a href="#cb17-1"></a><span class="fu">confint</span>(lm_engsize, <span class="at">level =</span> .<span class="dv">95</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>#&gt;                   2.5 %     97.5 %
 #&gt; (Intercept) -10346.0474 -6898.5441
 #&gt; enginesize     157.1932   182.9353</code></pre>
 </div>
-<div class="sourceCode cell-code" id="cb15"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1"></a><span class="fu">confint</span>(lm_engsize, <span class="at">level =</span> .<span class="dv">9</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb19"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb19-1"><a href="#cb19-1"></a><span class="fu">confint</span>(lm_engsize, <span class="at">level =</span> .<span class="dv">9</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>#&gt;                     5 %       95 %
 #&gt; (Intercept) -10066.6082 -7177.9833
@@ -497,14 +585,14 @@ By repeating the linear regression with the Engine size factor only, the followi
 </div>
 <p>Then by checking the confidence intervals with different levels, they were completely positive and hence rejects the null hypothesis. That means that we expect an effect in the price when we change the independent variable (engine size) associated with the significant coefficient. This as well is compatible with the p-value criteria (a very low p-value). As a result: <code>Engine size is statistically significant</code><br>
 This is also validated by plotting the results:</p>
-<div class="cell" data-hash="03_regression_cache/html/unnamed-chunk-6_fd61615cd6ba82645af0fb498840066c">
-<div class="sourceCode cell-code" id="cb17"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb17-1"><a href="#cb17-1"></a><span class="co">#Plot for validation:</span></span>
-<span id="cb17-2"><a href="#cb17-2"></a><span class="fu">ggplot</span>(lm_engsize, <span class="fu">aes</span>(<span class="at">x =</span> price, <span class="at">y =</span> enginesize)) <span class="sc">+</span> </span>
-<span id="cb17-3"><a href="#cb17-3"></a><span class="fu">geom_point</span>(<span class="at">size =</span> <span class="dv">3</span>, <span class="at">alpha =</span> <span class="fl">0.8</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell" data-hash="03_regression_cache/html/unnamed-chunk-7_695580ca2593790d54510672f5e4f65d">
+<div class="sourceCode cell-code" id="cb21"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb21-1"><a href="#cb21-1"></a><span class="co">#Plot for validation:</span></span>
+<span id="cb21-2"><a href="#cb21-2"></a><span class="fu">ggplot</span>(lm_engsize, <span class="fu">aes</span>(<span class="at">x =</span> price, <span class="at">y =</span> enginesize)) <span class="sc">+</span> </span>
+<span id="cb21-3"><a href="#cb21-3"></a><span class="fu">geom_point</span>(<span class="at">size =</span> <span class="dv">3</span>, <span class="at">alpha =</span> <span class="fl">0.8</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 <div class="quarto-figure quarto-figure-center">
 <figure class="figure">
-<p><a href="03_regression_files/figure-html/unnamed-chunk-6-1.png" class="lightbox" data-gallery="quarto-lightbox-gallery-1"><img src="03_regression_files/figure-html/unnamed-chunk-6-1.png" class="img-fluid figure-img" width="672"></a></p>
+<p><a href="03_regression_files/figure-html/unnamed-chunk-7-1.png" class="lightbox" data-gallery="quarto-lightbox-gallery-1"><img src="03_regression_files/figure-html/unnamed-chunk-7-1.png" class="img-fluid figure-img" width="672"></a></p>
 </figure>
 </div>
 </div>
@@ -512,10 +600,10 @@ This is also validated by plotting the results:</p>
 <ul>
 <li>Stroke:</li>
 </ul>
-<div class="cell" data-hash="03_regression_cache/html/unnamed-chunk-7_a746144af65f83500457221d5584c7fb">
-<div class="sourceCode cell-code" id="cb18"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb18-1"><a href="#cb18-1"></a><span class="co">#Stroke Linear Regression:</span></span>
-<span id="cb18-2"><a href="#cb18-2"></a>lm_stroke <span class="ot">&lt;-</span> <span class="fu">lm</span>(price <span class="sc">~</span> stroke, <span class="at">data=</span>car_prices) </span>
-<span id="cb18-3"><a href="#cb18-3"></a><span class="fu">summary</span>(lm_stroke)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell" data-hash="03_regression_cache/html/unnamed-chunk-8_70f85992c4fb823db06bc35d1fc88795">
+<div class="sourceCode cell-code" id="cb22"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb22-1"><a href="#cb22-1"></a><span class="co">#Stroke Linear Regression:</span></span>
+<span id="cb22-2"><a href="#cb22-2"></a>lm_stroke <span class="ot">&lt;-</span> <span class="fu">lm</span>(price <span class="sc">~</span> stroke, <span class="at">data=</span>car_prices) </span>
+<span id="cb22-3"><a href="#cb22-3"></a><span class="fu">summary</span>(lm_stroke)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>#&gt; 
 #&gt; Call:
@@ -536,25 +624,25 @@ This is also validated by plotting the results:</p>
 #&gt; Multiple R-squared:  0.0009501,  Adjusted R-squared:  -0.004631 
 #&gt; F-statistic: 0.1702 on 1 and 179 DF,  p-value: 0.6804</code></pre>
 </div>
-<div class="sourceCode cell-code" id="cb20"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb20-1"><a href="#cb20-1"></a><span class="fu">confint</span>(lm_stroke, <span class="at">level =</span> .<span class="dv">95</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb24"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb24-1"><a href="#cb24-1"></a><span class="fu">confint</span>(lm_stroke, <span class="at">level =</span> .<span class="dv">95</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>#&gt;                 2.5 %    97.5 %
 #&gt; (Intercept) -1486.438 22495.530
 #&gt; stroke      -2921.786  4466.557</code></pre>
 </div>
-<div class="sourceCode cell-code" id="cb22"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb22-1"><a href="#cb22-1"></a><span class="fu">confint</span>(lm_stroke, <span class="at">level =</span> .<span class="dv">9</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb26"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb26-1"><a href="#cb26-1"></a><span class="fu">confint</span>(lm_stroke, <span class="at">level =</span> .<span class="dv">9</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>#&gt;                   5 %      95 %
 #&gt; (Intercept)   457.433 20551.658
 #&gt; stroke      -2322.920  3867.691</code></pre>
 </div>
-<div class="sourceCode cell-code" id="cb24"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb24-1"><a href="#cb24-1"></a><span class="co">#Plot for validation:</span></span>
-<span id="cb24-2"><a href="#cb24-2"></a><span class="fu">ggplot</span>(lm_stroke, <span class="fu">aes</span>(<span class="at">x =</span> price, <span class="at">y =</span> stroke)) <span class="sc">+</span> </span>
-<span id="cb24-3"><a href="#cb24-3"></a><span class="fu">geom_point</span>(<span class="at">size =</span> <span class="dv">3</span>, <span class="at">alpha =</span> <span class="fl">0.8</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb28"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb28-1"><a href="#cb28-1"></a><span class="co">#Plot for validation:</span></span>
+<span id="cb28-2"><a href="#cb28-2"></a><span class="fu">ggplot</span>(lm_stroke, <span class="fu">aes</span>(<span class="at">x =</span> price, <span class="at">y =</span> stroke)) <span class="sc">+</span> </span>
+<span id="cb28-3"><a href="#cb28-3"></a><span class="fu">geom_point</span>(<span class="at">size =</span> <span class="dv">3</span>, <span class="at">alpha =</span> <span class="fl">0.8</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 <div class="quarto-figure quarto-figure-center">
 <figure class="figure">
-<p><a href="03_regression_files/figure-html/unnamed-chunk-7-1.png" class="lightbox" data-gallery="quarto-lightbox-gallery-2"><img src="03_regression_files/figure-html/unnamed-chunk-7-1.png" class="img-fluid figure-img" width="672"></a></p>
+<p><a href="03_regression_files/figure-html/unnamed-chunk-8-1.png" class="lightbox" data-gallery="quarto-lightbox-gallery-2"><img src="03_regression_files/figure-html/unnamed-chunk-8-1.png" class="img-fluid figure-img" width="672"></a></p>
 </figure>
 </div>
 </div>
@@ -562,10 +650,10 @@ This is also validated by plotting the results:</p>
 <ul>
 <li>Peak RPM:</li>
 </ul>
-<div class="cell" data-hash="03_regression_cache/html/unnamed-chunk-8_35c0c6d20eabd7456403e35cd63c85f2">
-<div class="sourceCode cell-code" id="cb25"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb25-1"><a href="#cb25-1"></a><span class="co">#Peak RPM Linear Regression:</span></span>
-<span id="cb25-2"><a href="#cb25-2"></a>lm_peakrpm <span class="ot">&lt;-</span> <span class="fu">lm</span>(price <span class="sc">~</span> peakrpm, <span class="at">data=</span>car_prices) </span>
-<span id="cb25-3"><a href="#cb25-3"></a><span class="fu">summary</span>(lm_peakrpm)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell" data-hash="03_regression_cache/html/unnamed-chunk-9_5f925170215867b0d73b62a33d756971">
+<div class="sourceCode cell-code" id="cb29"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb29-1"><a href="#cb29-1"></a><span class="co">#Peak RPM Linear Regression:</span></span>
+<span id="cb29-2"><a href="#cb29-2"></a>lm_peakrpm <span class="ot">&lt;-</span> <span class="fu">lm</span>(price <span class="sc">~</span> peakrpm, <span class="at">data=</span>car_prices) </span>
+<span id="cb29-3"><a href="#cb29-3"></a><span class="fu">summary</span>(lm_peakrpm)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>#&gt; 
 #&gt; Call:
@@ -586,25 +674,25 @@ This is also validated by plotting the results:</p>
 #&gt; Multiple R-squared:  0.0004349,  Adjusted R-squared:  -0.005149 
 #&gt; F-statistic: 0.07788 on 1 and 179 DF,  p-value: 0.7805</code></pre>
 </div>
-<div class="sourceCode cell-code" id="cb27"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb27-1"><a href="#cb27-1"></a><span class="fu">confint</span>(lm_peakrpm, <span class="at">level =</span> .<span class="dv">95</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb31"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb31-1"><a href="#cb31-1"></a><span class="fu">confint</span>(lm_peakrpm, <span class="at">level =</span> .<span class="dv">95</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>#&gt;                  2.5 %       97.5 %
 #&gt; (Intercept) 426.046744 29698.747876
 #&gt; peakrpm      -3.213255     2.417027</code></pre>
 </div>
-<div class="sourceCode cell-code" id="cb29"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb29-1"><a href="#cb29-1"></a><span class="fu">confint</span>(lm_peakrpm, <span class="at">level =</span> .<span class="dv">9</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb33"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb33-1"><a href="#cb33-1"></a><span class="fu">confint</span>(lm_peakrpm, <span class="at">level =</span> .<span class="dv">9</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>#&gt;                    5 %         95 %
 #&gt; (Intercept) 2798.76104 27326.033585
 #&gt; peakrpm       -2.75689     1.960661</code></pre>
 </div>
-<div class="sourceCode cell-code" id="cb31"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb31-1"><a href="#cb31-1"></a><span class="co">#Plot for validation:</span></span>
-<span id="cb31-2"><a href="#cb31-2"></a><span class="fu">ggplot</span>(lm_peakrpm, <span class="fu">aes</span>(<span class="at">x =</span> price, <span class="at">y =</span> peakrpm)) <span class="sc">+</span> </span>
-<span id="cb31-3"><a href="#cb31-3"></a>  <span class="fu">geom_point</span>(<span class="at">size =</span> <span class="dv">3</span>, <span class="at">alpha =</span> <span class="fl">0.8</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb35"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb35-1"><a href="#cb35-1"></a><span class="co">#Plot for validation:</span></span>
+<span id="cb35-2"><a href="#cb35-2"></a><span class="fu">ggplot</span>(lm_peakrpm, <span class="fu">aes</span>(<span class="at">x =</span> price, <span class="at">y =</span> peakrpm)) <span class="sc">+</span> </span>
+<span id="cb35-3"><a href="#cb35-3"></a>  <span class="fu">geom_point</span>(<span class="at">size =</span> <span class="dv">3</span>, <span class="at">alpha =</span> <span class="fl">0.8</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 <div class="quarto-figure quarto-figure-center">
 <figure class="figure">
-<p><a href="03_regression_files/figure-html/unnamed-chunk-8-1.png" class="lightbox" data-gallery="quarto-lightbox-gallery-3"><img src="03_regression_files/figure-html/unnamed-chunk-8-1.png" class="img-fluid figure-img" width="672"></a></p>
+<p><a href="03_regression_files/figure-html/unnamed-chunk-9-1.png" class="lightbox" data-gallery="quarto-lightbox-gallery-3"><img src="03_regression_files/figure-html/unnamed-chunk-9-1.png" class="img-fluid figure-img" width="672"></a></p>
 </figure>
 </div>
 </div>
@@ -613,11 +701,11 @@ This is also validated by plotting the results:</p>
 <ol start="5" type="1">
 <li>Adding the extra feature (seat_heating):</li>
 </ol>
-<div class="cell" data-hash="03_regression_cache/html/unnamed-chunk-9_a8d721aca315ec32b8eb8788d008df2e">
-<div class="sourceCode cell-code" id="cb32"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb32-1"><a href="#cb32-1"></a><span class="co">#Extra Feature</span></span>
-<span id="cb32-2"><a href="#cb32-2"></a>car_prices_extraFeatures <span class="ot">&lt;-</span> car_prices <span class="sc">%&gt;%</span> <span class="fu">mutate</span>(<span class="at">seat_heating =</span> <span class="cn">TRUE</span>)</span>
-<span id="cb32-3"><a href="#cb32-3"></a>lm_extraFeatures <span class="ot">&lt;-</span> <span class="fu">lm</span>(price <span class="sc">~</span> ., <span class="at">data=</span>car_prices_extraFeatures)</span>
-<span id="cb32-4"><a href="#cb32-4"></a><span class="fu">summary</span>(lm_extraFeatures)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell" data-hash="03_regression_cache/html/unnamed-chunk-10_e08df8abafeb5b4c60bcb92e818ffcf9">
+<div class="sourceCode cell-code" id="cb36"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb36-1"><a href="#cb36-1"></a><span class="co">#Extra Feature</span></span>
+<span id="cb36-2"><a href="#cb36-2"></a>car_prices_extraFeatures <span class="ot">&lt;-</span> car_prices <span class="sc">%&gt;%</span> <span class="fu">mutate</span>(<span class="at">seat_heating =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb36-3"><a href="#cb36-3"></a>lm_extraFeatures <span class="ot">&lt;-</span> <span class="fu">lm</span>(price <span class="sc">~</span> ., <span class="at">data=</span>car_prices_extraFeatures)</span>
+<span id="cb36-4"><a href="#cb36-4"></a><span class="fu">summary</span>(lm_extraFeatures)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>#&gt; 
 #&gt; Call:
@@ -675,8 +763,8 @@ This is also validated by plotting the results:</p>
 #&gt; Multiple R-squared:  0.9415, Adjusted R-squared:  0.9264 
 #&gt; F-statistic: 62.21 on 37 and 143 DF,  p-value: &lt; 2.2e-16</code></pre>
 </div>
-<div class="sourceCode cell-code" id="cb34"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb34-1"><a href="#cb34-1"></a>lm_seathaeting <span class="ot">&lt;-</span> <span class="fu">lm</span>(price <span class="sc">~</span> seat_heating, <span class="at">data=</span>car_prices_extraFeatures)</span>
-<span id="cb34-2"><a href="#cb34-2"></a><span class="fu">summary</span>(lm_seathaeting)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb38"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb38-1"><a href="#cb38-1"></a>lm_seathaeting <span class="ot">&lt;-</span> <span class="fu">lm</span>(price <span class="sc">~</span> seat_heating, <span class="at">data=</span>car_prices_extraFeatures)</span>
+<span id="cb38-2"><a href="#cb38-2"></a><span class="fu">summary</span>(lm_seathaeting)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>#&gt; 
 #&gt; Call:
@@ -697,14 +785,14 @@ This is also validated by plotting the results:</p>
 </div>
 </div>
 <p>By adding the extra feature seat_heating to the factors and performing the linear regression again either with all factors or with the extra factor added, we get the seat_heating coefficient as NA (missing value). This value is logical because the factor in this data set was assigned to true always and hence not affecting the price. This is also validated by the plot.</p>
-<div class="cell" data-hash="03_regression_cache/html/unnamed-chunk-10_066700293f6fd902be5b0bf4a122571b">
-<div class="sourceCode cell-code" id="cb36"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb36-1"><a href="#cb36-1"></a><span class="co">#Plot for Validation:</span></span>
-<span id="cb36-2"><a href="#cb36-2"></a><span class="fu">ggplot</span>(lm_seathaeting, <span class="fu">aes</span>(<span class="at">x =</span> price, <span class="at">y =</span> seat_heating)) <span class="sc">+</span> </span>
-<span id="cb36-3"><a href="#cb36-3"></a><span class="fu">geom_point</span>(<span class="at">size =</span> <span class="dv">3</span>, <span class="at">alpha =</span> <span class="fl">0.8</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell" data-hash="03_regression_cache/html/unnamed-chunk-11_e24d1472c6bbdd89bd65d30b7fd55ae4">
+<div class="sourceCode cell-code" id="cb40"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb40-1"><a href="#cb40-1"></a><span class="co">#Plot for Validation:</span></span>
+<span id="cb40-2"><a href="#cb40-2"></a><span class="fu">ggplot</span>(lm_seathaeting, <span class="fu">aes</span>(<span class="at">x =</span> price, <span class="at">y =</span> seat_heating)) <span class="sc">+</span> </span>
+<span id="cb40-3"><a href="#cb40-3"></a><span class="fu">geom_point</span>(<span class="at">size =</span> <span class="dv">3</span>, <span class="at">alpha =</span> <span class="fl">0.8</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 <div class="quarto-figure quarto-figure-center">
 <figure class="figure">
-<p><a href="03_regression_files/figure-html/unnamed-chunk-10-1.png" class="lightbox" data-gallery="quarto-lightbox-gallery-4"><img src="03_regression_files/figure-html/unnamed-chunk-10-1.png" class="img-fluid figure-img" width="672"></a></p>
+<p><a href="03_regression_files/figure-html/unnamed-chunk-11-1.png" class="lightbox" data-gallery="quarto-lightbox-gallery-4"><img src="03_regression_files/figure-html/unnamed-chunk-11-1.png" class="img-fluid figure-img" width="672"></a></p>
 </figure>
 </div>
 </div>
@@ -1063,7 +1151,7 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
 });
 </script>
 </div> <!-- /content -->
-<script>var lightboxQuarto = GLightbox({"selector":".lightbox","descPosition":"bottom","openEffect":"zoom","loop":true,"closeEffect":"zoom"});</script>
+<script>var lightboxQuarto = GLightbox({"selector":".lightbox","closeEffect":"zoom","openEffect":"zoom","loop":true,"descPosition":"bottom"});</script>
 
 
 
