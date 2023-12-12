@@ -35,13 +35,14 @@ library(tidyverse)
 first_year <- 1910
 last_year <- 2020 
 years <- seq(first_year,last_year, by=10)
+rand_var<-900
 n <- length(years)
 Masters_mean <- 0
 Masters_sd <- 5
 Box_Office_mean <- 0
 Box_Office_sd <- 20000
-Masters_data <- years+rnorm(n, Masters_mean, Masters_sd)
-BoxOffice_data <- sqrt((years)^2+rnorm(n, Box_Office_mean, Box_Office_sd))
+Masters_data <- years-rand_var+rnorm(n, Masters_mean, Masters_sd)
+BoxOffice_data <- sqrt((years-rand_var)^2+rnorm(n, Box_Office_mean, Box_Office_sd))
 data <- data.frame(Year=rep(years, times=2), data_group= rep(c("Masters_Degree_Issued","Box_Office_Revenue"),each=n) ,Data=c(Masters_data,BoxOffice_data) )
 data
 

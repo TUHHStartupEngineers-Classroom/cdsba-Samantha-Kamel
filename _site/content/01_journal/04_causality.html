@@ -230,7 +230,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <p>The correlation between the two variables is spurious.</p>
 <div class="quarto-figure quarto-figure-center">
 <figure class="figure">
-<p><a href="../../assets/img/04 Causality/Masters Degrees vs Box Office Revenue.png" class="lightbox" title="Spurious Correlation between Master’s Degrees &amp; Box Office Revenue" data-gallery="quarto-lightbox-gallery-1"><img src="../../assets/img/04 Causality/Masters Degrees vs Box Office Revenue.png" class="img-fluid figure-img"></a></p>
+<p><a href="../../assets/img/04 Causality/Masters Degrees vs Box Office Revenue.png" class="lightbox" data-gallery="quarto-lightbox-gallery-1" title="Spurious Correlation between Master’s Degrees &amp; Box Office Revenue"><img src="../../assets/img/04 Causality/Masters Degrees vs Box Office Revenue.png" class="img-fluid figure-img"></a></p>
 <figcaption class="figure-caption">Spurious Correlation between Master’s Degrees &amp; Box Office Revenue</figcaption>
 </figure>
 </div>
@@ -239,7 +239,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <section id="data-fabrication-and-visualization" class="level3">
 <h3 class="anchored" data-anchor-id="data-fabrication-and-visualization">Data Fabrication and Visualization:</h3>
 <p>By fabricating data similar to the previous one using a linear and a square root function with normally distributed noise, we would get a similar plot for this spurious correlation (because the noise used is random the plot and data will slightly change at each run but the concept and the plot shape are the same).</p>
-<div class="cell" data-hash="04_causality_cache/html/unnamed-chunk-1_10219553ec235eaefd72be1085ee3f74">
+<div class="cell" data-hash="04_causality_cache/html/unnamed-chunk-1_d039fd71730ca42edbd4371799c67617">
 <div class="sourceCode cell-code" id="cb1"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1"></a><span class="co">#Load Library:</span></span>
 <span id="cb1-2"><a href="#cb1-2"></a><span class="fu">library</span>(tidyverse)  </span>
 <span id="cb1-3"><a href="#cb1-3"></a></span>
@@ -247,20 +247,21 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span id="cb1-5"><a href="#cb1-5"></a>first_year <span class="ot">&lt;-</span> <span class="dv">1910</span></span>
 <span id="cb1-6"><a href="#cb1-6"></a>last_year <span class="ot">&lt;-</span> <span class="dv">2020</span> </span>
 <span id="cb1-7"><a href="#cb1-7"></a>years <span class="ot">&lt;-</span> <span class="fu">seq</span>(first_year,last_year, <span class="at">by=</span><span class="dv">10</span>)</span>
-<span id="cb1-8"><a href="#cb1-8"></a>n <span class="ot">&lt;-</span> <span class="fu">length</span>(years)</span>
-<span id="cb1-9"><a href="#cb1-9"></a>Masters_mean <span class="ot">&lt;-</span> <span class="dv">0</span></span>
-<span id="cb1-10"><a href="#cb1-10"></a>Masters_sd <span class="ot">&lt;-</span> <span class="dv">5</span></span>
-<span id="cb1-11"><a href="#cb1-11"></a>Box_Office_mean <span class="ot">&lt;-</span> <span class="dv">0</span></span>
-<span id="cb1-12"><a href="#cb1-12"></a>Box_Office_sd <span class="ot">&lt;-</span> <span class="dv">20000</span></span>
-<span id="cb1-13"><a href="#cb1-13"></a>Masters_data <span class="ot">&lt;-</span> years<span class="sc">+</span><span class="fu">rnorm</span>(n, Masters_mean, Masters_sd)</span>
-<span id="cb1-14"><a href="#cb1-14"></a>BoxOffice_data <span class="ot">&lt;-</span> <span class="fu">sqrt</span>((years)<span class="sc">^</span><span class="dv">2</span><span class="sc">+</span><span class="fu">rnorm</span>(n, Box_Office_mean, Box_Office_sd))</span>
-<span id="cb1-15"><a href="#cb1-15"></a>data <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(<span class="at">Year=</span><span class="fu">rep</span>(years, <span class="at">times=</span><span class="dv">2</span>), <span class="at">data_group=</span> <span class="fu">rep</span>(<span class="fu">c</span>(<span class="st">"Masters_Degree_Issued"</span>,<span class="st">"Box_Office_Revenue"</span>),<span class="at">each=</span>n) ,<span class="at">Data=</span><span class="fu">c</span>(Masters_data,BoxOffice_data) )</span>
-<span id="cb1-16"><a href="#cb1-16"></a>data</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb1-8"><a href="#cb1-8"></a>rand_var<span class="ot">&lt;-</span><span class="dv">900</span></span>
+<span id="cb1-9"><a href="#cb1-9"></a>n <span class="ot">&lt;-</span> <span class="fu">length</span>(years)</span>
+<span id="cb1-10"><a href="#cb1-10"></a>Masters_mean <span class="ot">&lt;-</span> <span class="dv">0</span></span>
+<span id="cb1-11"><a href="#cb1-11"></a>Masters_sd <span class="ot">&lt;-</span> <span class="dv">5</span></span>
+<span id="cb1-12"><a href="#cb1-12"></a>Box_Office_mean <span class="ot">&lt;-</span> <span class="dv">0</span></span>
+<span id="cb1-13"><a href="#cb1-13"></a>Box_Office_sd <span class="ot">&lt;-</span> <span class="dv">20000</span></span>
+<span id="cb1-14"><a href="#cb1-14"></a>Masters_data <span class="ot">&lt;-</span> years<span class="sc">-</span>rand_var<span class="sc">+</span><span class="fu">rnorm</span>(n, Masters_mean, Masters_sd)</span>
+<span id="cb1-15"><a href="#cb1-15"></a>BoxOffice_data <span class="ot">&lt;-</span> <span class="fu">sqrt</span>((years<span class="sc">-</span>rand_var)<span class="sc">^</span><span class="dv">2</span><span class="sc">+</span><span class="fu">rnorm</span>(n, Box_Office_mean, Box_Office_sd))</span>
+<span id="cb1-16"><a href="#cb1-16"></a>data <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(<span class="at">Year=</span><span class="fu">rep</span>(years, <span class="at">times=</span><span class="dv">2</span>), <span class="at">data_group=</span> <span class="fu">rep</span>(<span class="fu">c</span>(<span class="st">"Masters_Degree_Issued"</span>,<span class="st">"Box_Office_Revenue"</span>),<span class="at">each=</span>n) ,<span class="at">Data=</span><span class="fu">c</span>(Masters_data,BoxOffice_data) )</span>
+<span id="cb1-17"><a href="#cb1-17"></a>data</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 
 <div data-pagedtable="false">
   <script data-pagedtable-source="" type="application/json">
-{"columns":[{"label":["Year"],"name":[1],"type":["dbl"],"align":["right"]},{"label":["data_group"],"name":[2],"type":["chr"],"align":["left"]},{"label":["Data"],"name":[3],"type":["dbl"],"align":["right"]}],"data":[{"1":"1910","2":"Masters_Degree_Issued","3":"1914.787"},{"1":"1920","2":"Masters_Degree_Issued","3":"1929.406"},{"1":"1930","2":"Masters_Degree_Issued","3":"1939.013"},{"1":"1940","2":"Masters_Degree_Issued","3":"1937.373"},{"1":"1950","2":"Masters_Degree_Issued","3":"1954.471"},{"1":"1960","2":"Masters_Degree_Issued","3":"1959.993"},{"1":"1970","2":"Masters_Degree_Issued","3":"1972.885"},{"1":"1980","2":"Masters_Degree_Issued","3":"1990.542"},{"1":"1990","2":"Masters_Degree_Issued","3":"1996.660"},{"1":"2000","2":"Masters_Degree_Issued","3":"2001.985"},{"1":"2010","2":"Masters_Degree_Issued","3":"2007.692"},{"1":"2020","2":"Masters_Degree_Issued","3":"2010.917"},{"1":"1910","2":"Box_Office_Revenue","3":"1915.122"},{"1":"1920","2":"Box_Office_Revenue","3":"1917.711"},{"1":"1930","2":"Box_Office_Revenue","3":"1935.020"},{"1":"1940","2":"Box_Office_Revenue","3":"1937.088"},{"1":"1950","2":"Box_Office_Revenue","3":"1949.573"},{"1":"1960","2":"Box_Office_Revenue","3":"1969.623"},{"1":"1970","2":"Box_Office_Revenue","3":"1969.616"},{"1":"1980","2":"Box_Office_Revenue","3":"1976.570"},{"1":"1990","2":"Box_Office_Revenue","3":"1987.565"},{"1":"2000","2":"Box_Office_Revenue","3":"1996.334"},{"1":"2010","2":"Box_Office_Revenue","3":"2008.511"},{"1":"2020","2":"Box_Office_Revenue","3":"2025.088"}],"options":{"columns":{"min":{},"max":[10]},"rows":{"min":[10],"max":[10]},"pages":{}}}
+{"columns":[{"label":["Year"],"name":[1],"type":["dbl"],"align":["right"]},{"label":["data_group"],"name":[2],"type":["chr"],"align":["left"]},{"label":["Data"],"name":[3],"type":["dbl"],"align":["right"]}],"data":[{"1":"1910","2":"Masters_Degree_Issued","3":"1010.786"},{"1":"1920","2":"Masters_Degree_Issued","3":"1018.155"},{"1":"1930","2":"Masters_Degree_Issued","3":"1027.207"},{"1":"1940","2":"Masters_Degree_Issued","3":"1035.164"},{"1":"1950","2":"Masters_Degree_Issued","3":"1057.041"},{"1":"1960","2":"Masters_Degree_Issued","3":"1060.146"},{"1":"1970","2":"Masters_Degree_Issued","3":"1074.843"},{"1":"1980","2":"Masters_Degree_Issued","3":"1077.972"},{"1":"1990","2":"Masters_Degree_Issued","3":"1087.240"},{"1":"2000","2":"Masters_Degree_Issued","3":"1105.293"},{"1":"2010","2":"Masters_Degree_Issued","3":"1108.893"},{"1":"2020","2":"Masters_Degree_Issued","3":"1121.799"},{"1":"1910","2":"Box_Office_Revenue","3":"1020.154"},{"1":"1920","2":"Box_Office_Revenue","3":"1022.631"},{"1":"1930","2":"Box_Office_Revenue","3":"1028.588"},{"1":"1940","2":"Box_Office_Revenue","3":"1040.869"},{"1":"1950","2":"Box_Office_Revenue","3":"1058.523"},{"1":"1960","2":"Box_Office_Revenue","3":"1070.300"},{"1":"1970","2":"Box_Office_Revenue","3":"1066.055"},{"1":"1980","2":"Box_Office_Revenue","3":"1079.775"},{"1":"1990","2":"Box_Office_Revenue","3":"1105.395"},{"1":"2000","2":"Box_Office_Revenue","3":"1093.043"},{"1":"2010","2":"Box_Office_Revenue","3":"1098.610"},{"1":"2020","2":"Box_Office_Revenue","3":"1123.182"}],"options":{"columns":{"min":{},"max":[10]},"rows":{"min":[10],"max":[10]},"pages":{}}}
   </script>
 </div>
 </div>
@@ -628,7 +629,7 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
 });
 </script>
 </div> <!-- /content -->
-<script>var lightboxQuarto = GLightbox({"closeEffect":"zoom","openEffect":"zoom","loop":true,"selector":".lightbox","descPosition":"bottom"});</script>
+<script>var lightboxQuarto = GLightbox({"descPosition":"bottom","selector":".lightbox","closeEffect":"zoom","loop":true,"openEffect":"zoom"});</script>
 
 
 
