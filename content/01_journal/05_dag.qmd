@@ -2,6 +2,79 @@
 title: "Directed Acyclic Graphs"
 ---
 
-::: callout-note
-You can delete everything in here and start fresh.
-:::
+> ### **`Assignment 7:`**  
+
+1. The parking spots example could be summerized by th following DAG:  
+
+```{r}
+# Load packages
+
+library(dagitty)
+
+library(ggdag)
+
+# create DAG from dagitty
+dag_model <- 'dag {
+bb="0,0,1,1"
+Parking [exposure,pos="0.1,0.5"]
+Sales [outcome,pos="0.5,0.5"]
+A [pos="0.3,0.1"]
+B [pos="0.3,0.3"]
+C [pos="0.3,0.5"]
+D [pos="0.3,0.7"]
+Location [pos="0.3,1"]
+Parking -> A
+Parking -> B
+Parking -> C
+Parking -> D
+A -> Sales
+B -> Sales
+C -> Sales
+D -> Sales
+Location -> Parking
+Location -> Sales
+}
+'
+# draw DAG
+ggdag_status(dag_model)
+```
+
+2. Loading SaaS company Data and linear regression:  
+
+```{r}
+#Loading Library & Data:
+
+library(tidyverse)  
+
+
+customer_sat <- readRDS("D:/OneDrive/Samantha/TUHH/1stsemester/Causal Data Science for Business Analytics (SE)/Causal_Data_Science_Data/customer_sat.rds")
+
+head(customer_sat)
+
+
+#Linear Regression on follow_ups:
+lm_followups <- lm(satisfaction ~ follow_ups , data=customer_sat) 
+summary(lm_followups)
+
+#Linear Regression on follow_ups & account for subscription:
+
+lm_followups_sub <- lm(satisfaction ~ . , data=customer_sat) 
+summary(lm_followups_sub)
+```
+
+3. Comparing coefficients & Explanation:  
+  
+For the regression on follow_ups only, the estimate value for follow_ups is negative indicating a negative relation (the higher the number of follow_ups, the lower the satisfaction). However, including the subscription type as a factor changed the results totally as now the estimate value for the follow_ups now became positive indicating a positive relation.   
+One possible explanation could be that comparing the general relation between the follow up calls and the satisfaction is not the right indicator as it doesn't take into account that the number of follow ups, the services provided, the nature of support during the call and many other factors may differ based on the type of subscription. Therefore, the true relation was revealed when the subscription type was considered. One other explanation after examining the following plots would be that each subscription type has a different range for follow ups number and satisfaction level. This indicates that the satisfaction level has a positive relation with number of follow_ups within each subscription category.  
+
+4. Data Visualization:  
+
+```{r}
+#Satisfaction vs Follow_ups:
+ggplot(customer_sat,aes(x = satisfaction, y = follow_ups)) +  geom_point() +
+  stat_smooth(method = "lm", se = F)
+
+#Satisfaction vs Follow_ups categorized by the subscription:
+ggplot(customer_sat,aes(x = satisfaction, y = follow_ups, group=subscription, color=subscription)) +  geom_point() +
+  stat_smooth(method = "lm", se = F)
+```
