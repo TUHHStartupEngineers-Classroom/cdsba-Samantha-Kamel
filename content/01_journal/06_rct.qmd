@@ -2,6 +2,116 @@
 title: "Randomized Controlled Trials"
 ---
 
-::: callout-note
-You can delete everything in here and start fresh.
-:::
+> ### **`Assignment 8:`**  
+Given a set of Data about a randomized experiment run by an online shop. E-commerce websites frequently conduct numerous randomized experiments, commonly referred to as AB testing in a business context.
+
+1. Check whether the covariates are balanced across the groups. Use a plot to show it.  
+2. Run a regression to find the effect of chatbot on sales.  
+3. Find subgroup-specific effects by including an interaction. Compute a CATE for one exemplary group.  
+4. Use the outcome variable purchase and run a logistic regression and interpret the coefficient for chatbot.  
+
+### **Solution:**  
+
+1. Differences Plots: to check the balance of the covariates, their differences are plotted for both groups (with/ without chatbot).
+
+```{r}
+#Load Library & data:
+
+library(tidyverse)
+
+
+abtest_online <- readRDS("D:/OneDrive/Samantha/TUHH/1stsemester/Causal Data Science for Business Analytics (SE)/Causal_Data_Science_Data/abtest_online.rds")
+
+head(abtest_online)
+
+#Previous Visits difference plot:
+compare_previsit <- 
+  ggplot(abtest_online, 
+         aes(x = chatbot, 
+             y = previous_visit, 
+             color = as.factor(chatbot))) +
+  stat_summary(geom = "errorbar", 
+               width = .5,
+               fun.data = "mean_se", 
+               fun.args = list(mult=1.96),
+               show.legend = F) +
+  labs(x = NULL, y = "Previous Visit", title = "Difference in previous visits")
+
+compare_previsit
+
+#Mobile Device users difference plot:
+compare_mobiledevice <- 
+  ggplot(abtest_online, 
+         aes(x = chatbot, 
+             y = mobile_device, 
+             color = as.factor(chatbot))) +
+  stat_summary(geom = "errorbar", 
+               width = .5,
+               fun.data = "mean_se", 
+               fun.args = list(mult=1.96),
+               show.legend = F) +
+  labs(x = NULL, y = "Mobile Device", title = "Difference in mobile users")
+
+compare_mobiledevice
+
+#Purchase difference plot:
+compare_purchase <- 
+  ggplot(abtest_online, 
+         aes(x = chatbot, 
+             y = purchase, 
+             color = as.factor(chatbot))) +
+  stat_summary(geom = "errorbar", 
+               width = .5,
+               fun.data = "mean_se", 
+               fun.args = list(mult=1.96),
+               show.legend = F) +
+  labs(x = NULL, y = "Purchase", title = "Difference in purchases")
+
+compare_purchase
+
+#Purchases amount difference plot:
+compare_purchaseamount <- 
+  ggplot(abtest_online, 
+         aes(x = chatbot, 
+             y = purchase_amount, 
+             color = as.factor(chatbot))) +
+  stat_summary(geom = "errorbar", 
+               width = .5,
+               fun.data = "mean_se", 
+               fun.args = list(mult=1.96),
+               show.legend = F) +
+  labs(x = NULL, y = "Purchase Amount", title = "Difference in purchases amount")
+
+compare_purchaseamount
+```
+
+As illustrated by the plots the covariates are not balanced.
+
+2. The effect of chatbot on sales:
+
+```{r}
+#Linear Regression on Chatbot:
+lm_chatbot <- lm(purchase_amount ~ chatbot, data=abtest_online)
+summary(lm_chatbot)
+```
+
+By checking the estimate value, having a chatbot has a negative relation with the purchases amount (sales).
+
+3. Mobile users sub-group effect:
+
+```{r}
+#Linear Regression on Chatbot in interaction with mobile users:
+lm_chatbot_mobusr <- lm(purchase_amount ~ chatbot* mobile_device, data=abtest_online)
+summary(lm_chatbot_mobusr)
+```
+
+Negative estimate value indicates negative relation.
+
+4. Logistic regression of purchase on chatbot: 
+
+```{r}
+logistic_regression <- glm(purchase ~ chatbot, family=binomial(link='logit'), abtest_online)
+summary(logistic_regression)
+```
+
+The estimate value for ChatbotTrue is negative which means that having a chatbot decreases the chances of purchasing from a user and the p-value is less than 0.5 meaning this has a statistically significant effect. $\beta = -0.98939$ then $e^\beta = e^{-0.98939} = 0.372$ and this means having a chatbot is associated with a $62.8\% (1-0.372=0.628)$ reduction in the purchase possibility.  
