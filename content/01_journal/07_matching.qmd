@@ -2,6 +2,131 @@
 title: "Matching and Subclassification"
 ---
 
-::: callout-note
-You can delete everything in here and start fresh.
-:::
+> ### **`Assignment 9:`**
+You are running an online store and one year ago, you introduced a plus membership to bind customers to your store and increase revenue. The plus memberships comes at a small cost for the customers, which is why not all of the customers subscribed. Now you want to examine whether binding customers by this membership program in fact increases your sales with subscribed customers. But of course, there are potentially confounding variables such as age, sex or pre_avg_purch (previous average purchases).  
+
+1. Check the relationships between the variables and draw a DAG as you understand the relations.  
+2. Compute a naive estimate of the average treatment effect.  
+3. Use the following matching methods to obtain more precise estimates:
+   a. (Coarsened) Exact Matching.  
+   b. Nearest-Neighbor Matching.  
+   c. Inverse Probability Weighting.
+
+### **Solution:**  
+
+1. DAG:  
+
+```{r}
+#Loading Libraries & Data
+
+library(tidyverse)  
+
+
+library(dagitty)  
+
+
+library(ggdag)  
+
+
+library(MatchIt)  
+
+
+
+membership <- readRDS("D:/OneDrive/Samantha/TUHH/1stsemester/Causal Data Science for Business Analytics (SE)/Causal_Data_Science_Data/membership.rds")
+
+head(membership)
+  
+# Define DAG
+dag_model <- 'dag {
+  bb="0,0,1,1"
+  Membership [exposure,pos="0.1,0.4"]
+  Purchases [outcome,pos="0.5,0.4"]
+  Age [pos="0.3,0.8"]
+  Sex [pos="0.3,0.2"]
+  "Prev Purchases" [pos="0.3,0.6"]
+  Membership -> Purchases
+  "Prev Purchases" -> Membership
+  "Prev Purchases" -> Purchases
+  Age -> Membership
+  Age -> Purchases
+  Sex -> Membership
+  Sex -> Purchases
+}'
+
+# DAG 
+ggdag_adjustment_set(dag_model, shadow = T, text = F) +
+  guides(color = "none") +  # Turn off legend
+  geom_dag_label_repel(aes(label = name))
+```
+
+2. Naive Estimate of the ATE:  
+
+```{r}
+# Naive estimation (not accounting for backdoors)
+model_naive <- lm( avg_purch~ card, data = membership)
+summary(model_naive)
+```
+
+3. Matching Methods:
+
+   a. (Coarsened) Exact Matching:
+   
+```{r}
+#(Coarsened) Exact Matching:
+cem <- matchit(card ~ age + sex + pre_avg_purch,
+               data = membership, 
+               method = 'cem', 
+               estimand = 'ATE')
+# Covariate balance
+summary(cem)
+# Use matched data
+df_cem <- match.data(cem)
+model_cem <- lm(avg_purch~ card, data = df_cem, weights = weights)
+summary(model_cem)
+```
+
+   b. Nearest-Neighbor Matching:
+
+```{r}
+#Nearest-Neighbor Matching: 
+nn <- matchit(card ~ age + sex + pre_avg_purch,
+              data = membership,
+              method = "nearest", 
+              distance = "mahalanobis", 
+              replace = T)
+# Covariate Balance
+summary(nn)
+# Use matched data
+df_nn <- match.data(nn)
+model_nn <- lm(avg_purch~ card, data = df_nn, weights = weights)
+summary(model_nn)
+```
+
+   c. Inverse Probability Weighting:
+   
+```{r}
+#Inverse Probability Weighting:
+# (1) Propensity scores
+model_prop <- glm(card ~ age + sex + pre_avg_purch,
+                  data = membership,
+                  family = binomial(link = "logit"))
+summary(model_prop)
+# Add propensities to table
+df_aug <- membership %>% mutate(propensity = predict(model_prop, type = "response"))
+# Extend data by IPW scores
+df_ipw <- df_aug %>% mutate(
+  ipw = (card/propensity) + ((1-card) / (1-propensity)))
+df_ipw %>% 
+  select(card, age, sex, pre_avg_purch, propensity, ipw)
+# (2) Estimation
+model_ipw <- lm(avg_purch~ card,
+                data = df_ipw, 
+                weights = ipw)
+summary(model_ipw)
+# Run with high weights excluded
+model_ipw_trim <- lm(avg_purch~ card,
+                     data = df_ipw %>% filter(propensity %>% between(0.15, 0.85)),
+                     weights = ipw)
+summary(model_ipw_trim)
+```
+
