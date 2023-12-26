@@ -2,6 +2,110 @@
 title: "Instrumental Variables"
 ---
 
-::: callout-note
-You can delete everything in here and start fresh.
-:::
+> ### **`Assignment 11:`**  
+you have developed an app and you are already having an active user base. Of course, some users are more active than other users. Also, users might use the app for different purposes. In general, user behavior likely depends on a lot of unobserved characteristics.
+Obviously, your goal is to keep users as long as possible on the app to maximize your ad revenues. To do that, you want to introduce a new feature and see how it affects time spent on the app. Simply comparing users who use the newly introduced feature to users who don’t would result in a biased estimate due to the unobserved confounders regarding their activity and willingness to use a new feature.
+Therefore, you perform a so called randomized encouragement trial, where for a random selection of users, a popup appears when opening the app and encourages these users to test new feature. The users who are not randomly selected don’t get a popup message but could also use the new feature.  
+
+1. Draw a DAG of how you understand the relationships.  
+2. Compute the naive, biased estimate.  
+3. For the assumptions that can be (partly) tested, check whether they are satisfied by either computing correlations or drawing plots. Argue whether instrumental variable estimation is an adequate procedure.  
+4. Compute the IV estimate using 2SLS and compare it to the naive estimate. Would you consider the naive estimate biased, and if yes, does it have an upward or downward bias?  
+
+### **Solution:**  
+
+1. DAG:
+
+```{r}
+#Loading Libraries & Data
+
+library(tidyverse)  
+
+
+library(dagitty)  
+
+
+library(ggdag)
+
+
+library(estimatr)  
+
+
+rand_enc <- readRDS("D:/OneDrive/Samantha/TUHH/1stsemester/Causal Data Science for Business Analytics (SE)/Causal_Data_Science_Data/rand_enc.rds")
+
+head(rand_enc)
+
+#Define DAG
+iv_expl <- dagify(
+  Y ~ D,
+  Y ~ U,
+  D ~ U,
+  D ~ Z,
+  exposure = "D",
+  latent = "U",
+  outcome = "Y",
+  coords = list(x = c(U = 1, D = 0, Y = 2, Z = -1),
+                y = c(U = 1, D = 0, Y = 0, Z = 0)),
+  labels = c("D" = "Using New Feature", 
+             "Y" = "Time Spent", 
+             "U" = "Activity",
+             "Z" = "Randomized Encouragement Trial")
+)
+
+#DAG
+ggdag(iv_expl, text = T) +
+      geom_dag_label_repel(aes(label = label))
+```
+
+2. Naive, Biased Estimate:  
+
+```{r}
+#Direct regression
+naive_est <- lm(time_spent ~ used_ftr, data=rand_enc)
+summary(naive_est)
+```
+
+3. Assumptions Check: 
+
+```{r}
+#Correlation:
+app_assume <- rand_enc %>%
+  filter(used_ftr == 1)
+
+cor(app_assume$rand_enc,app_assume$time_spent)
+```
+
+Since the correlation value is a very small negative value, the rand_enc and the outcome are not correlated and hence it could be used as an instrumental variable.
+
+```{r}
+#Correlation Matrix
+cor(rand_enc) %>% round(2)
+
+#Plotting
+ggplot(rand_enc, aes(x = time_spent, y = used_ftr, color = as.factor(used_ftr))) +
+  geom_jitter(alpha = .5) +
+  scale_color_discrete(labels = c("Control Group", "Treatment Group")) +
+  theme(legend.title = element_blank()) + ggtitle("Time Spent vs Used Feature")
+
+
+ggplot(rand_enc, aes(x = time_spent, y = rand_enc, color = as.factor(rand_enc))) +
+  geom_jitter(alpha = .5) +
+  scale_color_discrete(labels = c("Without Trial", "With Trial")) +
+  theme(legend.title = element_blank()) + ggtitle("Time Spent vs Trail Application")
+
+
+ggplot(rand_enc, aes(x = used_ftr, y = rand_enc, color = as.factor(rand_enc))) +
+  geom_jitter(alpha = .5) +
+  scale_color_discrete(labels = c("Without Trial", "With Trial")) +
+  theme(legend.title = element_blank()) + ggtitle("Used Feature vs Trail Application")
+```
+
+4. 2SLS:  
+
+```{r}
+#IV
+model_iv <- iv_robust(time_spent ~ used_ftr | rand_enc, data = rand_enc)
+summary(model_iv) 
+```
+
+The naive estimate is considered biased as the estimate value is higher and the bias is upward.

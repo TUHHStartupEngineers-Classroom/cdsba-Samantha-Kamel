@@ -2,6 +2,71 @@
 title: "Difference-in-Differences"
 ---
 
-::: callout-note
-You can delete everything in here and start fresh.
-:::
+> ### **`Assignment 10:`**
+Imagine, you are manager of a large health provider that manages many hospitals and you want to test how a new admission procedure affects patient satisfaction. You randomly selected 18 hospitals that introduced the new admission procedure and compare them to 28 other hospitals that did not introduce the method. For both groups of hospitals you collected data from before and after the introduction. The data you have collected is from patient surveys where they were asked how satisfied they are. Perform a difference-in-differences analysis by:  
+
+1. Manually computing the mean satisfaction for treated and control hospitals before and after the treatment. Helpful functions could be filter(), pull() and basic arithmetic operations.  
+
+2. Using a linear regression to compute the estimate. Also, include group and time fixed effects in the regression, i.e. one regressor for each month and one regressor for each hospital: Consider, whether you want to include them as:  
+
+a. month + hospital or as  
+b. as.factor(month) + as.factor(hospital)  
+
+and explain what the difference is.  
+
+### **Solution:**    
+
+1. Difference-in-Differences:  
+
+```{r}
+#Load Libraries & Data
+
+library(tidyverse)  
+
+
+hospdd <- readRDS("D:/OneDrive/Samantha/TUHH/1stsemester/Causal Data Science for Business Analytics (SE)/Causal_Data_Science_Data/hospdd.rds")
+
+glimpse(hospdd)
+
+
+#DID
+before_control <- mean(hospdd %>%
+  filter(procedure == 0, hospital>18 & hospital<= 46) %>% 
+  pull(satis))
+
+
+before_treatment <- mean(hospdd %>%
+  filter(procedure == 0, hospital>= 1 & hospital<=18) %>% 
+  pull(satis))
+
+
+diff_before <- before_treatment - before_control
+
+after_control <- mean(hospdd %>%
+  filter(procedure == 1, hospital>18 & hospital<= 46) %>% 
+  pull(satis))
+
+after_control<- mean(rep(0,dim(hospdd)[1]))
+
+after_treatment <- mean(hospdd %>%
+  filter(procedure == 1, hospital>= 1 & hospital<=18) %>% 
+  pull(satis))
+
+diff_after <- after_treatment - after_control
+
+diff <- diff_after - diff_before
+
+diff
+```
+
+2. Regression:  
+
+```{r}
+lm_dat <- lm(satis ~ month + hospital, data=hospdd)
+summary(lm_dat)
+
+lm_dat_as_factor <- lm(satis ~ as.factor(month) + as.factor(hospital), data=hospdd)
+summary(lm_dat_as_factor)
+```
+
+The second regression (using as.factor()) makes more sense as it tests the different hospitals on the different months that's why it is more meaningful. While, the first regression contains all hospitals throughout the whole year which is not useful.
