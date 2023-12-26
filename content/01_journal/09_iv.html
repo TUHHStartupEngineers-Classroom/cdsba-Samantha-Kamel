@@ -6,7 +6,7 @@
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
-<meta name="author" content="Oliver Mork">
+<meta name="author" content="Samantha Kamel">
 
 <title>MyLabJournal - Instrumental Variables</title>
 <style>
@@ -20,6 +20,40 @@ ul.task-list li input[type="checkbox"] {
   width: 0.8em;
   margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
   vertical-align: middle;
+}
+/* CSS for syntax highlighting */
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
 }
 </style>
 
@@ -43,6 +77,9 @@ ul.task-list li input[type="checkbox"] {
 <link href="../../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
 <link href="../../site_libs/bootstrap/bootstrap.min.css" rel="stylesheet" class="quarto-color-scheme" id="quarto-bootstrap" data-mode="light">
 <link href="../../site_libs/bootstrap/bootstrap-dark.min.css" rel="stylesheet" class="quarto-color-scheme quarto-color-alternate" id="quarto-bootstrap" data-mode="dark">
+<script src="../../site_libs/quarto-contrib/glightbox/glightbox.min.js"></script>
+<link href="../../site_libs/quarto-contrib/glightbox/glightbox.min.css" rel="stylesheet">
+<link href="../../site_libs/quarto-contrib/glightbox/lightbox.css" rel="stylesheet">
 <script id="quarto-search-options" type="application/json">{
   "location": "navbar",
   "copy-button": false,
@@ -63,6 +100,9 @@ ul.task-list li input[type="checkbox"] {
     "search-label": "Search"
   }
 }</script>
+
+<link href="../../site_libs/pagedtable-1.1/css/pagedtable.css" rel="stylesheet">
+<script src="../../site_libs/pagedtable-1.1/js/pagedtable.js"></script>
 
 
 </head>
@@ -165,7 +205,7 @@ ul.task-list li input[type="checkbox"] {
     <div>
     <div class="quarto-title-meta-heading">Author</div>
     <div class="quarto-title-meta-contents">
-             <p>Oliver Mork </p>
+             <p>Samantha Kamel </p>
           </div>
   </div>
     
@@ -176,21 +216,191 @@ ul.task-list li input[type="checkbox"] {
 
 </header>
 
-<div class="callout callout-style-default callout-note callout-titled">
-<div class="callout-header d-flex align-content-center">
-<div class="callout-icon-container">
-<i class="callout-icon"></i>
+<blockquote class="blockquote">
+<h3 id="assignment-11" class="anchored"><strong><code>Assignment 11:</code></strong></h3>
+<p>you have developed an app and you are already having an active user base. Of course, some users are more active than other users. Also, users might use the app for different purposes. In general, user behavior likely depends on a lot of unobserved characteristics. Obviously, your goal is to keep users as long as possible on the app to maximize your ad revenues. To do that, you want to introduce a new feature and see how it affects time spent on the app. Simply comparing users who use the newly introduced feature to users who don’t would result in a biased estimate due to the unobserved confounders regarding their activity and willingness to use a new feature. Therefore, you perform a so called randomized encouragement trial, where for a random selection of users, a popup appears when opening the app and encourages these users to test new feature. The users who are not randomly selected don’t get a popup message but could also use the new feature.</p>
+</blockquote>
+<ol type="1">
+<li>Draw a DAG of how you understand the relationships.<br>
+</li>
+<li>Compute the naive, biased estimate.<br>
+</li>
+<li>For the assumptions that can be (partly) tested, check whether they are satisfied by either computing correlations or drawing plots. Argue whether instrumental variable estimation is an adequate procedure.<br>
+</li>
+<li>Compute the IV estimate using 2SLS and compare it to the naive estimate. Would you consider the naive estimate biased, and if yes, does it have an upward or downward bias?</li>
+</ol>
+<section id="solution" class="level3">
+<h3 class="anchored" data-anchor-id="solution"><strong>Solution:</strong></h3>
+<ol type="1">
+<li>DAG:</li>
+</ol>
+<div class="cell" data-hash="09_iv_cache/html/unnamed-chunk-1_dad4f6651978c69af769c9161dc05244">
+<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1"></a><span class="co">#Loading Libraries &amp; Data</span></span>
+<span id="cb1-2"><a href="#cb1-2"></a></span>
+<span id="cb1-3"><a href="#cb1-3"></a><span class="fu">library</span>(tidyverse)  </span>
+<span id="cb1-4"><a href="#cb1-4"></a></span>
+<span id="cb1-5"><a href="#cb1-5"></a></span>
+<span id="cb1-6"><a href="#cb1-6"></a><span class="fu">library</span>(dagitty)  </span>
+<span id="cb1-7"><a href="#cb1-7"></a></span>
+<span id="cb1-8"><a href="#cb1-8"></a></span>
+<span id="cb1-9"><a href="#cb1-9"></a><span class="fu">library</span>(ggdag)</span>
+<span id="cb1-10"><a href="#cb1-10"></a></span>
+<span id="cb1-11"><a href="#cb1-11"></a></span>
+<span id="cb1-12"><a href="#cb1-12"></a><span class="fu">library</span>(estimatr)  </span>
+<span id="cb1-13"><a href="#cb1-13"></a></span>
+<span id="cb1-14"><a href="#cb1-14"></a></span>
+<span id="cb1-15"><a href="#cb1-15"></a>rand_enc <span class="ot">&lt;-</span> <span class="fu">readRDS</span>(<span class="st">"D:/OneDrive/Samantha/TUHH/1stsemester/Causal Data Science for Business Analytics (SE)/Causal_Data_Science_Data/rand_enc.rds"</span>)</span>
+<span id="cb1-16"><a href="#cb1-16"></a></span>
+<span id="cb1-17"><a href="#cb1-17"></a><span class="fu">head</span>(rand_enc)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+
+<div data-pagedtable="false">
+  <script data-pagedtable-source="" type="application/json">
+{"columns":[{"label":["rand_enc"],"name":[1],"type":["int"],"align":["right"]},{"label":["used_ftr"],"name":[2],"type":["int"],"align":["right"]},{"label":["time_spent"],"name":[3],"type":["dbl"],"align":["right"]}],"data":[{"1":"0","2":"1","3":"30.51346"},{"1":"0","2":"0","3":"19.78372"},{"1":"1","2":"1","3":"28.59107"},{"1":"0","2":"0","3":"18.63635"},{"1":"0","2":"0","3":"14.55074"},{"1":"1","2":"0","3":"12.41954"}],"options":{"columns":{"min":{},"max":[10]},"rows":{"min":[10],"max":[10]},"pages":{}}}
+  </script>
 </div>
-<div class="callout-title-container flex-fill">
-Note
+</div>
+<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1"></a><span class="co">#Define DAG</span></span>
+<span id="cb2-2"><a href="#cb2-2"></a>iv_expl <span class="ot">&lt;-</span> <span class="fu">dagify</span>(</span>
+<span id="cb2-3"><a href="#cb2-3"></a>  Y <span class="sc">~</span> D,</span>
+<span id="cb2-4"><a href="#cb2-4"></a>  Y <span class="sc">~</span> U,</span>
+<span id="cb2-5"><a href="#cb2-5"></a>  D <span class="sc">~</span> U,</span>
+<span id="cb2-6"><a href="#cb2-6"></a>  D <span class="sc">~</span> Z,</span>
+<span id="cb2-7"><a href="#cb2-7"></a>  <span class="at">exposure =</span> <span class="st">"D"</span>,</span>
+<span id="cb2-8"><a href="#cb2-8"></a>  <span class="at">latent =</span> <span class="st">"U"</span>,</span>
+<span id="cb2-9"><a href="#cb2-9"></a>  <span class="at">outcome =</span> <span class="st">"Y"</span>,</span>
+<span id="cb2-10"><a href="#cb2-10"></a>  <span class="at">coords =</span> <span class="fu">list</span>(<span class="at">x =</span> <span class="fu">c</span>(<span class="at">U =</span> <span class="dv">1</span>, <span class="at">D =</span> <span class="dv">0</span>, <span class="at">Y =</span> <span class="dv">2</span>, <span class="at">Z =</span> <span class="sc">-</span><span class="dv">1</span>),</span>
+<span id="cb2-11"><a href="#cb2-11"></a>                <span class="at">y =</span> <span class="fu">c</span>(<span class="at">U =</span> <span class="dv">1</span>, <span class="at">D =</span> <span class="dv">0</span>, <span class="at">Y =</span> <span class="dv">0</span>, <span class="at">Z =</span> <span class="dv">0</span>)),</span>
+<span id="cb2-12"><a href="#cb2-12"></a>  <span class="at">labels =</span> <span class="fu">c</span>(<span class="st">"D"</span> <span class="ot">=</span> <span class="st">"Using New Feature"</span>, </span>
+<span id="cb2-13"><a href="#cb2-13"></a>             <span class="st">"Y"</span> <span class="ot">=</span> <span class="st">"Time Spent"</span>, </span>
+<span id="cb2-14"><a href="#cb2-14"></a>             <span class="st">"U"</span> <span class="ot">=</span> <span class="st">"Activity"</span>,</span>
+<span id="cb2-15"><a href="#cb2-15"></a>             <span class="st">"Z"</span> <span class="ot">=</span> <span class="st">"Randomized Encouragement Trial"</span>)</span>
+<span id="cb2-16"><a href="#cb2-16"></a>)</span>
+<span id="cb2-17"><a href="#cb2-17"></a></span>
+<span id="cb2-18"><a href="#cb2-18"></a><span class="co">#DAG</span></span>
+<span id="cb2-19"><a href="#cb2-19"></a><span class="fu">ggdag</span>(iv_expl, <span class="at">text =</span> T) <span class="sc">+</span></span>
+<span id="cb2-20"><a href="#cb2-20"></a>      <span class="fu">geom_dag_label_repel</span>(<span class="fu">aes</span>(<span class="at">label =</span> label))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><a href="09_iv_files/figure-html/unnamed-chunk-1-1.png" class="lightbox" data-gallery="quarto-lightbox-gallery-1"><img src="09_iv_files/figure-html/unnamed-chunk-1-1.png" class="img-fluid figure-img" width="672"></a></p>
+</figure>
 </div>
 </div>
-<div class="callout-body-container callout-body">
-<p>You can delete everything in here and start fresh.</p>
+</div>
+<ol start="2" type="1">
+<li>Naive, Biased Estimate:</li>
+</ol>
+<div class="cell" data-hash="09_iv_cache/html/unnamed-chunk-2_8487d372416f0677c225012fd2eca86a">
+<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1"></a><span class="co">#Direct regression</span></span>
+<span id="cb3-2"><a href="#cb3-2"></a>naive_est <span class="ot">&lt;-</span> <span class="fu">lm</span>(time_spent <span class="sc">~</span> used_ftr, <span class="at">data=</span>rand_enc)</span>
+<span id="cb3-3"><a href="#cb3-3"></a><span class="fu">summary</span>(naive_est)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>#&gt; 
+#&gt; Call:
+#&gt; lm(formula = time_spent ~ used_ftr, data = rand_enc)
+#&gt; 
+#&gt; Residuals:
+#&gt;      Min       1Q   Median       3Q      Max 
+#&gt; -20.4950  -3.5393   0.0158   3.5961  20.5051 
+#&gt; 
+#&gt; Coefficients:
+#&gt;             Estimate Std. Error t value Pr(&gt;|t|)    
+#&gt; (Intercept) 18.86993    0.06955   271.3   &lt;2e-16 ***
+#&gt; used_ftr    10.82269    0.10888    99.4   &lt;2e-16 ***
+#&gt; ---
+#&gt; Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+#&gt; 
+#&gt; Residual standard error: 5.351 on 9998 degrees of freedom
+#&gt; Multiple R-squared:  0.497,  Adjusted R-squared:  0.497 
+#&gt; F-statistic:  9881 on 1 and 9998 DF,  p-value: &lt; 2.2e-16</code></pre>
 </div>
 </div>
+<ol start="3" type="1">
+<li>Assumptions Check:</li>
+</ol>
+<div class="cell" data-hash="09_iv_cache/html/unnamed-chunk-3_ed170859aaea5ec65e71de8afba0466c">
+<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1"></a><span class="co">#Correlation:</span></span>
+<span id="cb5-2"><a href="#cb5-2"></a>app_assume <span class="ot">&lt;-</span> rand_enc <span class="sc">%&gt;%</span></span>
+<span id="cb5-3"><a href="#cb5-3"></a>  <span class="fu">filter</span>(used_ftr <span class="sc">==</span> <span class="dv">1</span>)</span>
+<span id="cb5-4"><a href="#cb5-4"></a></span>
+<span id="cb5-5"><a href="#cb5-5"></a><span class="fu">cor</span>(app_assume<span class="sc">$</span>rand_enc,app_assume<span class="sc">$</span>time_spent)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>#&gt; [1] -0.02744462</code></pre>
+</div>
+</div>
+<p>Since the correlation value is a very small negative value, the rand_enc and the outcome are not correlated and hence it could be used as an instrumental variable.</p>
+<div class="cell" data-hash="09_iv_cache/html/unnamed-chunk-4_ca7491d5bbe689c1d430ea658796b64d">
+<div class="sourceCode cell-code" id="cb7"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1"></a><span class="co">#Correlation Matrix</span></span>
+<span id="cb7-2"><a href="#cb7-2"></a><span class="fu">cor</span>(rand_enc) <span class="sc">%&gt;%</span> <span class="fu">round</span>(<span class="dv">2</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>#&gt;            rand_enc used_ftr time_spent
+#&gt; rand_enc       1.00     0.20       0.13
+#&gt; used_ftr       0.20     1.00       0.71
+#&gt; time_spent     0.13     0.71       1.00</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb9"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1"></a><span class="co">#Plotting</span></span>
+<span id="cb9-2"><a href="#cb9-2"></a><span class="fu">ggplot</span>(rand_enc, <span class="fu">aes</span>(<span class="at">x =</span> time_spent, <span class="at">y =</span> used_ftr, <span class="at">color =</span> <span class="fu">as.factor</span>(used_ftr))) <span class="sc">+</span></span>
+<span id="cb9-3"><a href="#cb9-3"></a>  <span class="fu">geom_jitter</span>(<span class="at">alpha =</span> .<span class="dv">5</span>) <span class="sc">+</span></span>
+<span id="cb9-4"><a href="#cb9-4"></a>  <span class="fu">scale_color_discrete</span>(<span class="at">labels =</span> <span class="fu">c</span>(<span class="st">"Control Group"</span>, <span class="st">"Treatment Group"</span>)) <span class="sc">+</span></span>
+<span id="cb9-5"><a href="#cb9-5"></a>  <span class="fu">theme</span>(<span class="at">legend.title =</span> <span class="fu">element_blank</span>()) <span class="sc">+</span> <span class="fu">ggtitle</span>(<span class="st">"Time Spent vs Used Feature"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><a href="09_iv_files/figure-html/unnamed-chunk-4-1.png" class="lightbox" data-gallery="quarto-lightbox-gallery-2"><img src="09_iv_files/figure-html/unnamed-chunk-4-1.png" class="img-fluid figure-img" width="672"></a></p>
+</figure>
+</div>
+</div>
+<div class="sourceCode cell-code" id="cb10"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1"></a><span class="fu">ggplot</span>(rand_enc, <span class="fu">aes</span>(<span class="at">x =</span> time_spent, <span class="at">y =</span> rand_enc, <span class="at">color =</span> <span class="fu">as.factor</span>(rand_enc))) <span class="sc">+</span></span>
+<span id="cb10-2"><a href="#cb10-2"></a>  <span class="fu">geom_jitter</span>(<span class="at">alpha =</span> .<span class="dv">5</span>) <span class="sc">+</span></span>
+<span id="cb10-3"><a href="#cb10-3"></a>  <span class="fu">scale_color_discrete</span>(<span class="at">labels =</span> <span class="fu">c</span>(<span class="st">"Without Trial"</span>, <span class="st">"With Trial"</span>)) <span class="sc">+</span></span>
+<span id="cb10-4"><a href="#cb10-4"></a>  <span class="fu">theme</span>(<span class="at">legend.title =</span> <span class="fu">element_blank</span>()) <span class="sc">+</span> <span class="fu">ggtitle</span>(<span class="st">"Time Spent vs Trail Application"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><a href="09_iv_files/figure-html/unnamed-chunk-4-2.png" class="lightbox" data-gallery="quarto-lightbox-gallery-3"><img src="09_iv_files/figure-html/unnamed-chunk-4-2.png" class="img-fluid figure-img" width="672"></a></p>
+</figure>
+</div>
+</div>
+<div class="sourceCode cell-code" id="cb11"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1"></a><span class="fu">ggplot</span>(rand_enc, <span class="fu">aes</span>(<span class="at">x =</span> used_ftr, <span class="at">y =</span> rand_enc, <span class="at">color =</span> <span class="fu">as.factor</span>(rand_enc))) <span class="sc">+</span></span>
+<span id="cb11-2"><a href="#cb11-2"></a>  <span class="fu">geom_jitter</span>(<span class="at">alpha =</span> .<span class="dv">5</span>) <span class="sc">+</span></span>
+<span id="cb11-3"><a href="#cb11-3"></a>  <span class="fu">scale_color_discrete</span>(<span class="at">labels =</span> <span class="fu">c</span>(<span class="st">"Without Trial"</span>, <span class="st">"With Trial"</span>)) <span class="sc">+</span></span>
+<span id="cb11-4"><a href="#cb11-4"></a>  <span class="fu">theme</span>(<span class="at">legend.title =</span> <span class="fu">element_blank</span>()) <span class="sc">+</span> <span class="fu">ggtitle</span>(<span class="st">"Used Feature vs Trail Application"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><a href="09_iv_files/figure-html/unnamed-chunk-4-3.png" class="lightbox" data-gallery="quarto-lightbox-gallery-4"><img src="09_iv_files/figure-html/unnamed-chunk-4-3.png" class="img-fluid figure-img" width="672"></a></p>
+</figure>
+</div>
+</div>
+</div>
+<ol start="4" type="1">
+<li>2SLS:</li>
+</ol>
+<div class="cell" data-hash="09_iv_cache/html/unnamed-chunk-5_c24f7bfc7eee8b566726b27c628111a5">
+<div class="sourceCode cell-code" id="cb12"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1"></a><span class="co">#IV</span></span>
+<span id="cb12-2"><a href="#cb12-2"></a>model_iv <span class="ot">&lt;-</span> <span class="fu">iv_robust</span>(time_spent <span class="sc">~</span> used_ftr <span class="sc">|</span> rand_enc, <span class="at">data =</span> rand_enc)</span>
+<span id="cb12-3"><a href="#cb12-3"></a><span class="fu">summary</span>(model_iv) </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>#&gt; 
+#&gt; Call:
+#&gt; iv_robust(formula = time_spent ~ used_ftr | rand_enc, data = rand_enc)
+#&gt; 
+#&gt; Standard error type:  HC2 
+#&gt; 
+#&gt; Coefficients:
+#&gt;             Estimate Std. Error t value  Pr(&gt;|t|) CI Lower CI Upper   DF
+#&gt; (Intercept)   19.312     0.2248   85.89 0.000e+00   18.872    19.75 9998
+#&gt; used_ftr       9.738     0.5353   18.19 8.716e-73    8.689    10.79 9998
+#&gt; 
+#&gt; Multiple R-squared:  0.4921 ,    Adjusted R-squared:  0.492 
+#&gt; F-statistic:   331 on 1 and 9998 DF,  p-value: &lt; 2.2e-16</code></pre>
+</div>
+</div>
+<p>The naive estimate is considered biased as the estimate value is higher and the bias is upward.</p>
 
 
+</section>
 
 </main> <!-- /main -->
 <script id="quarto-html-after-body" type="application/javascript">
@@ -542,6 +752,7 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
 });
 </script>
 </div> <!-- /content -->
+<script>var lightboxQuarto = GLightbox({"closeEffect":"zoom","descPosition":"bottom","loop":true,"selector":".lightbox","openEffect":"zoom"});</script>
 
 
 
